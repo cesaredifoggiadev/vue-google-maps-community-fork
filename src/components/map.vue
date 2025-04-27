@@ -60,6 +60,22 @@ const props = {
       return {}
     },
   },
+  directionsEnabled: {
+    type: Boolean,
+    default: false,
+  },
+  origin: {
+    type: Object,
+    default: null,
+  },
+  destination: {
+    type: Object,
+    default: null,
+  },
+  travelMode: {
+    type: String,
+    default: 'DRIVING',
+  },
 }
 
 const events = [
@@ -164,6 +180,8 @@ export default {
   },
 
   mounted() {
+    let directionsRenderer = null;
+
     return this.$gmapApiPromiseLazy()
       .then(() => {
         // getting the DOM element where to create the map
@@ -176,6 +194,27 @@ export default {
         }
         delete options.options
         this.$mapObject = new google.maps.Map(element, options)
+        if (this.directionsEnabled && this.origin && this.destination) {
+          const directionsService = new google.maps.DirectionsService()
+          directionsRenderer = new google.maps.DirectionsRenderer()
+
+          directionsRenderer.setMap(this.$mapObject)
+
+          directionsService.route(
+            {
+              origin: this.origin,
+              destination: this.destination,
+              travelMode: this.travelMode || google.maps.TravelMode.DRIVING,
+            },
+            (result, status) => {
+              if (status === 'OK') {
+                directionsRenderer.setDirections(result)
+              } else {
+                console.error('Directions request failed:', status)
+              }
+            }
+          )
+        }
 
         // binding properties (two and one way)
         bindProps(this, this.$mapObject, props)
