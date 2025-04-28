@@ -143,7 +143,7 @@ const customMethods = {
         }
       )
     }
-  }
+  },
 
   /// Override mountableMixin::_resizeCallback
   /// because resizePreserveCenter is usually the
