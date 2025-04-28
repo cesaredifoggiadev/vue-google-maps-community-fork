@@ -136,7 +136,7 @@ const customMethods = {
         },
         (result, status) => {
           if (status === 'OK') {
-            directionsRenderer.setDirections(result)
+            directionsService.setDirections(result)
           } else {
             console.error('Directions request failed:', status)
           }
