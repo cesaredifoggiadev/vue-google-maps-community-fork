@@ -222,7 +222,7 @@ export default {
         }
         delete options.options
         this.$mapObject = new google.maps.Map(element, options)
-
+        customMethods.setDirections()
         // binding properties (two and one way)
         bindProps(this, this.$mapObject, props)
         // binding events
