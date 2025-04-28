@@ -180,7 +180,7 @@ export default {
   },
 
   mounted() {
-    let directionsRenderer = null;
+    let directionsRenderer = null
 
     return this.$gmapApiPromiseLazy()
       .then(() => {
@@ -194,33 +194,11 @@ export default {
         }
         delete options.options
         this.$mapObject = new google.maps.Map(element, options)
-        if (this.directionsEnabled && this.origin && this.destination) {
-          const directionsService = new google.maps.DirectionsService()
-          directionsRenderer = new google.maps.DirectionsRenderer()
-
-          directionsRenderer.setMap(this.$mapObject)
-
-          directionsService.route(
-            {
-              origin: this.origin,
-              destination: this.destination,
-              travelMode: this.travelMode || google.maps.TravelMode.DRIVING,
-            },
-            (result, status) => {
-              if (status === 'OK') {
-                directionsRenderer.setDirections(result)
-              } else {
-                console.error('Directions request failed:', status)
-              }
-            }
-          )
-        }
 
         // binding properties (two and one way)
         bindProps(this, this.$mapObject, props)
         // binding events
         bindEvents(this, this.$mapObject, events)
-
         // manually trigger center and zoom
         TwoWayBindingWrapper((increment, decrement, shouldUpdate) => {
           this.$mapObject.addListener('center_changed', () => {
@@ -245,7 +223,27 @@ export default {
         })
 
         this.$mapPromiseDeferred.resolve(this.$mapObject)
+        if (this.directionsEnabled && this.origin && this.destination) {
+          const directionsService = new google.maps.DirectionsService()
+          directionsRenderer = new google.maps.DirectionsRenderer()
 
+          directionsRenderer.setMap(this.$mapObject)
+
+          directionsService.route(
+            {
+              origin: this.origin,
+              destination: this.destination,
+              travelMode: this.travelMode || google.maps.TravelMode.DRIVING,
+            },
+            (result, status) => {
+              if (status === 'OK') {
+                directionsRenderer.setDirections(result)
+              } else {
+                console.error('Directions request failed:', status)
+              }
+            }
+          )
+        }
         return this.$mapObject
       })
       .catch((error) => {
