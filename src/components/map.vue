@@ -121,7 +121,7 @@ const customMethods = {
     this.$mapObject.setCenter(oldCenter)
   },
   setDirections() {
-    let directionsService = null
+    let directionsRenderer
     if (this.directionsEnabled && this.origin && this.destination) {
       const directionsService = new google.maps.DirectionsService()
       directionsRenderer = new google.maps.DirectionsRenderer()
@@ -201,9 +201,12 @@ export default {
         this.$mapObject.setZoom(zoom)
       }
     },
-    props(props) {
-      setDirections()
-    }
+    origin() {
+      customMethods.setDirections()
+    },
+    destination() {
+      customMethods.setDirections()
+    },
   },
 
   mounted() {
