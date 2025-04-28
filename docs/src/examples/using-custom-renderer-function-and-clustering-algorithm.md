@@ -55,7 +55,7 @@ Following this example will help you create your own render function and cluster
     },
     methods: {
       renderer: ({ count, position }) =>
-        new this.google.maps.Marker({
+        new this.google.maps.marker.AdvancedMarkerElement({
           label: {
             text: String(count),
             color: 'white',
@@ -63,7 +63,7 @@ Following this example will help you create your own render function and cluster
           },
           position,
           // adjust zIndex to be above other markers
-          zIndex: Number(this.google.maps.Marker.MAX_ZINDEX) + count,
+          zIndex: Number(this.google.maps.marker.AdvancedMarkerElement.MAX_ZINDEX) + count,
         }),
     },
   }
