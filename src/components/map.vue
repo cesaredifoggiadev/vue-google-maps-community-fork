@@ -120,6 +120,29 @@ const customMethods = {
     google.maps.event.trigger(this.$mapObject, 'resize')
     this.$mapObject.setCenter(oldCenter)
   },
+  setDirections() {
+    if (this.directionsEnabled && this.origin && this.destination) {
+      const directionsService = new google.maps.DirectionsService()
+      this.directionsRenderer = new google.maps.DirectionsRenderer()
+
+      this.directionsRenderer.setMap(this.$mapObject)
+
+      directionsService.route(
+        {
+          origin: this.origin,
+          destination: this.destination,
+          travelMode: this.travelMode || google.maps.TravelMode.DRIVING,
+        },
+        (result, status) => {
+          if (status === 'OK') {
+            this.directionsRenderer.setDirections(result)
+          } else {
+            console.error('Directions request failed:', status)
+          }
+        }
+      )
+    }
+  }
 
   /// Override mountableMixin::_resizeCallback
   /// because resizePreserveCenter is usually the
@@ -144,6 +167,11 @@ export default {
       {}
     ),
   }),
+  data() {
+    return {
+      directionsRenderer: null,
+    }
+  },
   inheritAttrs: false,
 
   provide() {
@@ -177,11 +205,12 @@ export default {
         this.$mapObject.setZoom(zoom)
       }
     },
+    props(props) {
+      setDirections()
+    }
   },
 
   mounted() {
-    let directionsRenderer = null
-
     return this.$gmapApiPromiseLazy()
       .then(() => {
         // getting the DOM element where to create the map
@@ -223,27 +252,6 @@ export default {
         })
 
         this.$mapPromiseDeferred.resolve(this.$mapObject)
-        if (this.directionsEnabled && this.origin && this.destination) {
-          const directionsService = new google.maps.DirectionsService()
-          directionsRenderer = new google.maps.DirectionsRenderer()
-
-          directionsRenderer.setMap(this.$mapObject)
-
-          directionsService.route(
-            {
-              origin: this.origin,
-              destination: this.destination,
-              travelMode: this.travelMode || google.maps.TravelMode.DRIVING,
-            },
-            (result, status) => {
-              if (status === 'OK') {
-                directionsRenderer.setDirections(result)
-              } else {
-                console.error('Directions request failed:', status)
-              }
-            }
-          )
-        }
         return this.$mapObject
       })
       .catch((error) => {
