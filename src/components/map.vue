@@ -121,11 +121,12 @@ const customMethods = {
     this.$mapObject.setCenter(oldCenter)
   },
   setDirections() {
+    let directionsService = null
     if (this.directionsEnabled && this.origin && this.destination) {
       const directionsService = new google.maps.DirectionsService()
-      this.directionsRenderer = new google.maps.DirectionsRenderer()
+      directionsRenderer = new google.maps.DirectionsRenderer()
 
-      this.directionsRenderer.setMap(this.$mapObject)
+      directionsRenderer.setMap(this.$mapObject)
 
       directionsService.route(
         {
@@ -135,7 +136,7 @@ const customMethods = {
         },
         (result, status) => {
           if (status === 'OK') {
-            this.directionsRenderer.setDirections(result)
+            directionsRenderer.setDirections(result)
           } else {
             console.error('Directions request failed:', status)
           }
@@ -167,11 +168,6 @@ export default {
       {}
     ),
   }),
-  data() {
-    return {
-      directionsRenderer: null,
-    }
-  },
   inheritAttrs: false,
 
   provide() {
