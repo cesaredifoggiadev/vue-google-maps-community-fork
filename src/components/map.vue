@@ -60,22 +60,6 @@ const props = {
       return {}
     },
   },
-  directionsEnabled: {
-    type: Boolean,
-    default: false,
-  },
-  origin: {
-    type: Object,
-    default: null,
-  },
-  destination: {
-    type: Object,
-    default: null,
-  },
-  travelMode: {
-    type: String,
-    default: 'DRIVING',
-  },
 }
 
 const events = [
@@ -157,6 +141,22 @@ export default {
   mixins: [mountableMixin],
   props: mappedPropsToVueProps({
     ...props,
+    directionsEnabled: {
+      type: Boolean,
+      default: false,
+    },
+    origin: {
+      type: Object,
+      default: null,
+    },
+    destination: {
+      type: Object,
+      default: null,
+    },
+    travelMode: {
+      type: String,
+      default: 'DRIVING',
+    },
     ...events.reduce(
       (obj, eventName) => ({
         ...obj,
