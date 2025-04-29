@@ -16,6 +16,7 @@ import MapElementMixin from './components/mapElementMixin'
 import buildComponent from './components/build-component'
 import MountableMixin from './utils/mountableMixin'
 import { Env } from './utils/env'
+import { library } from 'node_modules/webpack/types'
 let GMapApi = null
 
 export {
@@ -39,6 +40,7 @@ export default function install(Vue, options) {
   options = {
     installComponents: true,
     autobindAllEvents: false,
+    libraries: 'marker',
     ...options,
   }
 
